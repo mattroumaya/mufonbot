@@ -59,7 +59,7 @@ token <- rtweet::create_token(
   set_renv = FALSE
 )
 
-# tweet
+# send tweet
 rtweet::post_tweet(
   status = tweet,
   token = token
