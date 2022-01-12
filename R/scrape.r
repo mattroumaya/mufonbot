@@ -1,6 +1,6 @@
 library(tidyverse)
 library(rvest)
-#' @import tidyverse
+#' @import dplyr
 #' @import rvest
 #' @export
 scrape <- function() {
