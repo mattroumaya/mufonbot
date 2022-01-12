@@ -51,7 +51,7 @@ jobs:
 
       - name: Generate data
         run: |
-          source("R/job.R")
+          source("R/job.r")
         shell: Rscript {0}
 
       - name: Commit files
