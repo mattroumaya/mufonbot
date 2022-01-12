@@ -23,6 +23,8 @@ jobs:
       run: |
         R -e 'install.packages("dplyr")'
         R -e 'install.packages("rvest")'
+        R -e 'install.packages("rtweet")'
+        R -e 'install.packages("glue")'
     # Run R script
     - name: Scrape
       run: Rscript job.r
@@ -38,3 +40,7 @@ jobs:
       env:
         REPO_KEY: ${{secrets.GITHUB_TOKEN}}
         username: github-actions
+
+    # send tweet
+    - name: Tweet
+      run: Rscript tweet.r
