@@ -1,7 +1,7 @@
 on:
   schedule:
-    - cron: "*/5 * * * *"
-    
+    - cron: "*/1 * * * *"
+
 jobs:
   generate-data:
     runs-on: ${{ matrix.config.os }}
@@ -48,19 +48,19 @@ jobs:
         run: |
           remotes::install_deps(dependencies = TRUE)
         shell: Rscript {0}
-          
+
       - name: Generate data
         run: |
           source("R/job.R")
-        shell: Rscript {0} 
-        
+        shell: Rscript {0}
+
       - name: Commit files
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
           git add --all
           git commit -am "add data"
-          git push 
+          git push
       - name: Session info
         run: |
           options(width = 100)
