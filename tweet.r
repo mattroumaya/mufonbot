@@ -43,7 +43,7 @@ case_numbers <- dplyr::tibble(
 case_numbers <- case_numbers %>%
   dplyr::add_row(ID = reports$`Case Number`)
 
-# update case number so it does not repeat
+# update case number so it doesn't repeat
 write.csv(case_numbers, "data_raw/casenumbers/case numbers.csv", row.names = F)
 
 # create token
