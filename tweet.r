@@ -4,7 +4,6 @@ library(readr)
 library(rtweet)
 
 # read in recent data
-
 df <- file.info(list.files("data_raw", full.names = T))
 data <- rownames(df)[which.max(df$mtime)]
 df <- read_csv(data)
@@ -15,7 +14,6 @@ cases <- read_csv("data_raw/casenumbers/case numbers.csv")
 # filter out cases that were already tweeted
 df <- df %>%
   dplyr::filter(!`Case Number` %in% cases$ID)
-
 
 
 reports <- df %>%
@@ -48,7 +46,6 @@ case_numbers <- case_numbers %>%
 # update case number so it does not repeat
 write.csv(case_numbers, "data_raw/casenumbers/case numbers.csv", row.names = F)
 
-
 # create token
 token <- rtweet::create_token(
   app = "mufonbot",
@@ -59,8 +56,15 @@ token <- rtweet::create_token(
   set_renv = FALSE
 )
 
-
-
+# create token
+token <- rtweet::create_token(
+  app = "mufonbot",
+  consumer_key = api_key,
+  consumer_secret = api_key_secret,
+  access_token = access_token_x,
+  access_secret = access_token_secret_x,
+  set_renv = FALSE
+)
 
 # send tweet
 rtweet::post_tweet(
