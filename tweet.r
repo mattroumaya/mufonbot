@@ -60,15 +60,6 @@ token <- rtweet::create_token(
 )
 
 
-# create token
-token <- rtweet::create_token(
-  app = "mufonbot",
-  consumer_key = api_key,
-  consumer_secret = api_key_secret,
-  access_token = access_token_x,
-  access_secret = access_token_secret_x,
-  set_renv = FALSE
-)
 
 
 # send tweet
