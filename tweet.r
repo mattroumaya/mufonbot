@@ -62,5 +62,3 @@ rtweet::post_tweet(
   token = token
 )
 
-print(Sys.getenv("TWITTER_CONSUMER_API_KEY"))
-print(Sys.getenv("TWITTER_CONSUMER_API_SECRET"))
