@@ -13,7 +13,8 @@ cases <- read_csv("data_raw/casenumbers/case numbers.csv")
 
 # filter out cases that were already tweeted
 df <- df %>%
-  dplyr::filter(!`Case Number` %in% cases$ID)
+  dplyr::filter(!`Case Number` %in% cases$ID) %>%
+  dplyr::filter(!is.na(`Short Description`) & !is.na(City) & !is.na(`State/Country`))
 
 
 reports <- df %>%
@@ -35,9 +36,7 @@ tweet <- reports %>%
                   #ufotwitter")
 
 # archive case number
-case_numbers <- dplyr::tibble(
-  ID = 0
-)
+case_numbers <- read_csv("data_raw/casenumbers/case numbers.csv")
 
 # append recent tweet
 case_numbers <- case_numbers %>%
