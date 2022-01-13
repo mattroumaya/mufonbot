@@ -12,7 +12,11 @@ jobs:
   autoscrape:
     # The type of runner that the job will run on
     runs-on: macos-latest
-
+    env:
+      TWITTER_CONSUMER_API_KEY: ${{ secrets.TWITTER_CONSUMER_API_KEY }}
+      TWITTER_CONSUMER_API_SECRET: ${{ secrets.TWITTER_CONSUMER_API_SECRET }}
+      TWITTER_ACCESS_TOKEN: ${{ secrets.TWITTER_ACCESS_TOKEN }}
+      TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
     # Load repo and install R
     steps:
     - uses: actions/checkout@master
@@ -42,12 +46,14 @@ jobs:
         REPO_KEY: ${{secrets.GITHUB_TOKEN}}
         username: github-actions
 
-    # send tweet
-    - name: Tweet
       env:
         TWITTER_CONSUMER_API_KEY: ${{ secrets.TWITTER_CONSUMER_API_KEY }}
         TWITTER_CONSUMER_API_SECRET: ${{ secrets.TWITTER_CONSUMER_API_SECRET }}
         TWITTER_ACCESS_TOKEN: ${{ secrets.TWITTER_ACCESS_TOKEN }}
         TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
+    # send tweet
+    - name: Tweet
       run: Rscript tweet.r
+
+
 
