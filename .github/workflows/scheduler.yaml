@@ -3,7 +3,7 @@ name: mufon_scrape
 # Controls when the action will run.
 on:
   schedule:
-    - cron:  '0 13 * * *'
+    - cron:  '*/30 * * * *'
   push:
     branches: [main, master]
 
