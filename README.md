@@ -1,4 +1,4 @@
-# mufonbot
+# mufonbot :alien:
 
 [A Twitter bot](https://twitter.com/mufonbot)
 
