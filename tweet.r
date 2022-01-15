@@ -2,6 +2,8 @@ library(glue)
 library(dplyr)
 library(readr)
 library(rtweet)
+library(rvest)
+library(stringr)
 
 # read in recent data
 df <- file.info(list.files("data_raw", full.names = T))
@@ -33,15 +35,15 @@ reports <- df %>%
 
   # check for media
   media_df <- rvest::read_html("https://mufoncms.com/cgi-bin/report_handler.pl?req=latest_reports")%>%
-    html_nodes("a") %>%
-    html_attr("href") %>%
+    rvest::html_nodes("a") %>%
+    rvest::html_attr("href") %>%
     stringr::str_subset(c("\\.jpg|\\.JPG|\\.PNG|\\.png")) %>%
-    as_tibble() %>%
-    mutate("Case Number" = sub("\\_submitter.*", "", value),
+    dplyr::as_tibble() %>%
+    dplyr::mutate("Case Number" = sub("\\_submitter.*", "", value),
            "Case Number" = as.numeric(sub('.*\\/', '', `Case Number`))) %>%
-    group_by(`Case Number`) %>%
-    slice(1) %>%
-    right_join(reports)
+    dplyr::group_by(`Case Number`) %>%
+    dplyr::slice(1) %>%
+    dplyr::right_join(reports)
 
 
   tweet <- reports %>%
