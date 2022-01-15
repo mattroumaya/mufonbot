@@ -13,9 +13,18 @@ mufon <- rvest::read_html(
 names(mufon) <- paste(mufon[1, ], sep = "")
 mufon <- mufon[-1, ]
 
-write.csv(
+# write.csv(
+#   mufon,
+#   file = "data_raw/mufon.csv",
+#   row.names = FALSE
+# )
+
+write.table(
   mufon,
   file = "data_raw/mufon.csv",
+  append = TRUE,
+  sep = ",",
   row.names = FALSE,
-  append = TRUE
+  col.names = FALSE
 )
+

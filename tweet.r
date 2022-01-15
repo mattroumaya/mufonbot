@@ -13,15 +13,35 @@ cases <- read_csv("data_raw/casenumbers/case numbers.csv")
 
 # filter out cases that were already tweeted
 df <- df %>%
+  dplyr::group_by_all() %>%
+  unique() %>%
+  dplyr::ungroup() %>%
   dplyr::filter(!`Case Number` %in% cases$ID) %>%
   dplyr::filter(!is.na(`Short Description`) & !is.na(City) & !is.na(`State/Country`))
 
 if (nrow(df) > 1) {
-  reports <- df %>%
-    dplyr::sample_n(1)
+  # reports <- df %>%
+  #   dplyr::sample_n(1)
+reports <- df %>%
+  filter(`Case Number` == 120343) %>%
+  na.omit()
 
-  city_hashtag <- paste0("#", gsub(" ", "", reports$City, fixed = TRUE))
 
+  # remove punctuation and create city hashtag
+  city_hashtag <- gsub("[[:punct:]]+", "", reports$City)
+  city_hashtag <- paste0("#", gsub(" ", "", city_hashtag, fixed = TRUE))
+
+  # check for media
+  media_df <- rvest::read_html("https://mufoncms.com/cgi-bin/report_handler.pl?req=latest_reports")%>%
+    html_nodes("a") %>%
+    html_attr("href") %>%
+    stringr::str_subset(c("\\.jpg|\\.JPG|\\.PNG|\\.png")) %>%
+    as_tibble() %>%
+    mutate("Case Number" = sub("\\_submitter.*", "", value),
+           "Case Number" = as.numeric(sub('.*\\/', '', `Case Number`))) %>%
+    group_by(`Case Number`) %>%
+    slice(1) %>%
+    right_join(reports)
 
 
   tweet <- reports %>%
@@ -58,9 +78,24 @@ if (nrow(df) > 1) {
     set_renv = FALSE
   )
 
-  # send tweet
-  rtweet::post_tweet(
-    status = tweet,
-    token = token
-  )
+  if (nrow(media_df) > 0) {
+
+    # if media exists, download and make available
+    temp_file <- tempfile()
+    download.file(media_df$value, temp_file)
+
+    rtweet::post_tweet(
+      status = tweet,
+      media = temp_file,
+      token = token
+    )
+  }
+
+  if (nrow(media_df) == 0) {
+    rtweet::post_tweet(
+      status = tweet,
+      media = temp_file,
+      token = token
+    )
+  }
 }
