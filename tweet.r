@@ -96,7 +96,6 @@ reports <- df %>%
   if (nrow(media_df) == 0) {
     rtweet::post_tweet(
       status = tweet,
-      media = temp_file,
       token = token
     )
   }
