@@ -15,7 +15,7 @@ mufon <- mufon[-1, ]
 
 write.csv(
   mufon,
-  file = "mufon.csv",
+  file = "data_raw/mufon.csv",
   row.names = FALSE,
   append = TRUE
 )
