@@ -18,7 +18,7 @@ mufon$`Long Description` <- NULL
 
 write.csv(
   mufon,
-  file = paste0("data_raw/data_", make.names(Sys.Date()), ".csv"),
+  file = paste0("data_raw/data_", make.names(Sys.time()), ".csv"),
   row.names = FALSE
 )
 
