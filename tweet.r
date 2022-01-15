@@ -43,7 +43,8 @@ if (nrow(df) > 1) {
     ) %>%
     dplyr::group_by(`Case Number`) %>%
     dplyr::slice(1) %>%
-    dplyr::right_join(reports)
+    dplyr::right_join(reports) %>%
+    dplyr::filter(!is.na(value))
 
 
   tweet <- reports %>%
