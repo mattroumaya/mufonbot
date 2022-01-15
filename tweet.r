@@ -22,11 +22,9 @@ df <- df %>%
   dplyr::filter(!is.na(`Short Description`) & !is.na(City) & !is.na(`State/Country`))
 
 if (nrow(df) > 1) {
-  # reports <- df %>%
-  #   dplyr::sample_n(1)
-reports <- df %>%
-  filter(`Case Number` == 120343) %>%
-  na.omit()
+  reports <- df %>%
+    dplyr::sample_n(1)
+
 
 
   # remove punctuation and create city hashtag
@@ -34,13 +32,15 @@ reports <- df %>%
   city_hashtag <- paste0("#", gsub(" ", "", city_hashtag, fixed = TRUE))
 
   # check for media
-  media_df <- rvest::read_html("https://mufoncms.com/cgi-bin/report_handler.pl?req=latest_reports")%>%
+  media_df <- rvest::read_html("https://mufoncms.com/cgi-bin/report_handler.pl?req=latest_reports") %>%
     rvest::html_nodes("a") %>%
     rvest::html_attr("href") %>%
     stringr::str_subset(c("\\.jpg|\\.JPG|\\.PNG|\\.png")) %>%
     dplyr::as_tibble() %>%
-    dplyr::mutate("Case Number" = sub("\\_submitter.*", "", value),
-           "Case Number" = as.numeric(sub('.*\\/', '', `Case Number`))) %>%
+    dplyr::mutate(
+      "Case Number" = sub("\\_submitter.*", "", value),
+      "Case Number" = as.numeric(sub(".*\\/", "", `Case Number`))
+    ) %>%
     dplyr::group_by(`Case Number`) %>%
     dplyr::slice(1) %>%
     dplyr::right_join(reports)
