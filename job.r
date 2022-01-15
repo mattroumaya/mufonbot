@@ -2,29 +2,24 @@ library(dplyr)
 library(rvest)
 
 # scrape data
-mufon <- rvest::read_html(
-  "https://mufoncms.com/last_20_report_public.html"
+mufon <- read_html(
+  "https://mufoncms.com/cgi-bin/report_handler.pl?req=latest_reports"
 ) %>%
-  rvest::html_element("table") %>%
+  html_element(
+    "table"
+  ) %>%
   rvest::html_table() %>%
   dplyr::bind_rows()
 
 # rename the columns
 names(mufon) <- paste(mufon[1, ], sep = "")
 mufon <- mufon[-1, ]
+mufon$`Long Description` <- NULL
 
-# write.csv(
-#   mufon,
-#   file = "data_raw/mufon.csv",
-#   row.names = FALSE
-# )
-
-write.table(
+write.csv(
   mufon,
-  file = "data_raw/mufon.csv",
-  append = TRUE,
-  sep = ",",
-  row.names = FALSE,
-  col.names = FALSE
+  file = paste0("data_raw/data_", make.names(Sys.Date()), ".csv"),
+  row.names = FALSE
 )
+
 
