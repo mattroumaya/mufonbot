@@ -35,7 +35,7 @@ if (nrow(df) > 1) {
   media_df <- rvest::read_html("https://mufoncms.com/cgi-bin/report_handler.pl?req=latest_reports") %>%
     rvest::html_nodes("a") %>%
     rvest::html_attr("href") %>%
-    stringr::str_subset(c("\\.jpg|\\.JPG|\\.PNG|\\.png")) %>%
+    stringr::str_subset(c("\\.jpg|\\.JPG|\\.PNG|\\.png|\\.jpeg|\\.JPEG")) %>%
     dplyr::as_tibble() %>%
     dplyr::mutate(
       "Case Number" = sub("\\_submitter.*", "", value),
