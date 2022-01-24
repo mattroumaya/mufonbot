@@ -7,9 +7,13 @@ mufon <- read_html(
 ) %>%
   html_element(
     "table"
-  ) %>%
+  )
+
+if (length(mufon)>0) {
+mufon <- mufon %>%
   rvest::html_table() %>%
   dplyr::bind_rows()
+}
 
 # site above contains links to media and has been glitching out since 1/23/22
 # for now, just pull text reports
