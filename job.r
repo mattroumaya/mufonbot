@@ -13,11 +13,11 @@ if (length(mufon)>0) {
 mufon <- mufon %>%
   rvest::html_table() %>%
   dplyr::bind_rows()
-}
+} else {
 
 # site above contains links to media and has been glitching out since 1/23/22
 # for now, just pull text reports
-if (!exists("mufon")) {
+
   mufon <- read_html(
     "https://mufoncms.com/last_20_report_public.html"
   ) %>%
