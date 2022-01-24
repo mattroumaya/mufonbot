@@ -11,6 +11,20 @@ mufon <- read_html(
   rvest::html_table() %>%
   dplyr::bind_rows()
 
+# site above contains links to media and has been glitching out since 1/23/22
+# for now, just pull text reports
+if (!exists("mufon")) {
+  mufon <- read_html(
+    "https://mufoncms.com/last_20_report_public.html"
+  ) %>%
+    html_element(
+      "table"
+    ) %>%
+    rvest::html_table() %>%
+    dplyr::bind_rows()
+}
+
+
 # rename the columns
 names(mufon) <- paste(mufon[1, ], sep = "")
 mufon <- mufon[-1, ]
