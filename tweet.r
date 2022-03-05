@@ -19,7 +19,7 @@ df <- df %>%
   unique() %>%
   dplyr::ungroup() %>%
   dplyr::filter(!`Case Number` %in% cases$ID) %>%
-  dplyr::filter(!is.na(`Short Description`) & !is.na(City) & !is.na(`State/Country`))
+  dplyr::filter(!is.na(`Short Description`) & !is.na(City) & !is.na(`State/Country`) & `Short Description` != "")
 
 if (nrow(df) > 1) {
   reports <- df %>%

@@ -3,11 +3,13 @@ library(rvest)
 
 # scrape data
 mufon <- read_html(
-  "https://mufoncms.com/cgi-bin/report_handler.pl?req=latest_reports"
+  "https://mufoncms.com/last_20_report_public.html"
 ) %>%
   html_element(
     "table"
   )
+
+# this url is now blocked "https://mufoncms.com/cgi-bin/report_handler.pl?req=latest_reports"
 
 if (length(mufon)>0) {
 mufon <- mufon %>%
