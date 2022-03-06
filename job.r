@@ -1,35 +1,18 @@
 library(dplyr)
 library(rvest)
 
+# this url that contained media is now blocked:
+# - "https://mufoncms.com/cgi-bin/report_handler.pl?req=latest_reports"
+
 # scrape data
 mufon <- read_html(
   "https://mufoncms.com/last_20_report_public.html"
 ) %>%
   html_element(
     "table"
-  )
-
-# this url is now blocked "https://mufoncms.com/cgi-bin/report_handler.pl?req=latest_reports"
-
-if (length(mufon)>0) {
-mufon <- mufon %>%
+  ) %>%
   rvest::html_table() %>%
   dplyr::bind_rows()
-} else {
-
-# site above contains links to media and has been glitching out since 1/23/22
-# for now, just pull text reports
-
-  mufon <- read_html(
-    "https://mufoncms.com/last_20_report_public.html"
-  ) %>%
-    html_element(
-      "table"
-    ) %>%
-    rvest::html_table() %>%
-    dplyr::bind_rows()
-}
-
 
 # rename the columns
 names(mufon) <- paste(mufon[1, ], sep = "")
