@@ -6,7 +6,7 @@ library(rvest)
 
 # scrape data
 mufon <- read_html(
-  "https://mufoncms.com/last_20_report_public.html"
+  "https://mufoncms.com/last_20_report.html"
 ) %>%
   html_element(
     "table"
