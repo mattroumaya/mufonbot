@@ -48,12 +48,21 @@ if (nrow(df) > 1) {
   tweet <- reports %>%
     glue::glue_data(
       "Event: {`Short Description`}",
+
+
       "
-                  Location: {City}, {`State/Country`}",
+
+      Location: {City}, {`State/Country`}",
+
+
       "
-                  Date of Event: {`Date of Event`}",
+
+      Date of Event: {`Date of Event`}",
+
+
       "
-                  #ufotwitter #uaptwitter {city_hashtag}"
+
+      #ufotwitter #uaptwitter {city_hashtag}"
     )
 
   # archive case number
