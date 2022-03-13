@@ -94,9 +94,7 @@ if (nrow(df) > 1) {
       media = temp_file,
       token = token
     )
-  }
-
-  if (nrow(media_df) == 0) {
+  } else if (nrow(media_df) == 0) {
     rtweet::post_tweet(
       status = tweet,
       token = token
