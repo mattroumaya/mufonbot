@@ -29,7 +29,8 @@ scrape_mufon <- function(url) {
 
 }
 
-mufon <- purrr::map_df(urls, ~scrape_mufon(.))
+mufon <- purrr::map_df(urls, ~scrape_mufon(.)) %>%
+  filter(`Short Description` != "")
 
 
 write.csv(
