@@ -30,21 +30,6 @@ if (nrow(df) > 1) {
   city_hashtag <- gsub("[[:punct:]]+", "", reports$City)
   city_hashtag <- paste0("#", gsub(" ", "", city_hashtag, fixed = TRUE))
 
-  # check for media
-  media_df <- rvest::read_html("https://mufoncms.com/last_20_report.html") %>%
-    rvest::html_nodes("a") %>%
-    rvest::html_attr("href") %>%
-    stringr::str_subset(c("\\.jpg|\\.JPG|\\.PNG|\\.png|\\.jpeg|\\.JPEG")) %>%
-    dplyr::as_tibble() %>%
-    dplyr::mutate(
-      "Case Number" = sub("\\_submitter.*", "", value),
-      "Case Number" = as.numeric(sub(".*\\/", "", `Case Number`))
-    ) %>%
-    dplyr::group_by(`Case Number`) %>%
-    dplyr::slice(1) %>%
-    dplyr::right_join(reports) %>%
-    dplyr::filter(!is.na(value))
-
   tweet <- reports %>%
     glue::glue_data(
       "Event: {`Short Description`}",
@@ -85,19 +70,9 @@ if (nrow(df) > 1) {
     set_renv = FALSE
   )
 
-  if (nrow(media_df) > 0) {
-    # if media exists, download and make available
-    temp_file <- tempfile()
-    download.file(media_df$value, temp_file)
-    rtweet::post_tweet(
-      status = tweet,
-      media = temp_file,
-      token = token
-    )
-  } else if (nrow(media_df) == 0) {
     rtweet::post_tweet(
       status = tweet,
       token = token
     )
   }
-}
+
