@@ -50,7 +50,7 @@ tweet <- reports %>%
 
 
 # append recent tweet
-case_numbers <- case_numbers %>%
+case_numbers <- cases %>%
   dplyr::add_row(id = reports$ID)
 
 # update case number so it doesn't repeat
