@@ -26,26 +26,11 @@ jobs:
         R -e 'install.packages("glue")'
         R -e 'install.packages("readr")'
         R -e 'install.packages("stringr")'
-    # Run R script
-    - name: Scrape
-      run: Rscript job.r
-
- # Add new files in data folder, commit along with other modified files, push
-    - name: Commit files
-      run: |
-        git config --local user.name actions-user
-        git config --local user.email "actions@github.com"
-        git add data_raw/*
-        git commit -am "GH ACTION Headlines $(date)"
-        git push origin master
-      env:
-        REPO_KEY: ${{secrets.GITHUB_TOKEN}}
-        username: github-actions
-
+        R -e 'install.packages("glue")'
 
     # send tweet
     - name: Tweet
-      run: Rscript tweet.r
+      run: Rscript nuforcjob.r
       env:
         TWITTER_CONSUMER_API_KEY: ${{ secrets.TWITTER_CONSUMER_API_KEY }}
         TWITTER_CONSUMER_API_SECRET: ${{ secrets.TWITTER_CONSUMER_API_SECRET }}
@@ -57,7 +42,7 @@ jobs:
       run: |
         git config --local user.name actions-user
         git config --local user.email "actions@github.com"
-        git add data_raw/casenumbers/*
+        git add nuforc/data_raw/archive.csv
         git commit -am "GH ACTION Headlines $(date)"
         git push origin master
       env:
