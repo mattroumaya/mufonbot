@@ -26,7 +26,7 @@ jobs:
         R -e 'install.packages("glue")'
         R -e 'install.packages("readr")'
         R -e 'install.packages("stringr")'
-        R -e 'install.packages("glue")'
+        R -e 'install.packages("here")'
 
     # send tweet
     - name: Tweet
