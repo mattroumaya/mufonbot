@@ -1,8 +1,8 @@
 library(glue)
+library(rvest)
 library(dplyr)
 library(readr)
 library(rtweet)
-library(rvest)
 library(stringr)
 library(here)
 
@@ -19,7 +19,7 @@ df <- df %>%
   dplyr::filter(!ID %in% cases$id)
 
 reports <- df %>%
-  arrange(Image) %>%
+  dplyr::arrange(Image) %>%
   dplyr::slice(1)
 
 city_hashtag <- gsub("[[:punct:]]+", "", reports$City)
@@ -29,10 +29,6 @@ city_hashtag <- paste0("#", gsub(" ", "", city_hashtag, fixed = TRUE))
 tweet <- reports %>%
   glue::glue_data(
     "Summary: {`Summary`}",
-
-    "
-
-    Shape: {Shape}",
 
 
     "
@@ -70,9 +66,9 @@ token <- rtweet::create_token(
 
 if (reports$Image == "Yes") {
   temp_file <- tempfile()
-  imgsrc <- read_html(reports$URL) %>%
-    html_node(xpath = '//*/img') %>%
-    html_attr('src')
+  imgsrc <- rvest::read_html(reports$URL) %>%
+    rvest::html_node(xpath = '//*/img') %>%
+    rvest::html_attr('src')
   download.file(imgsrc, temp_file)
   rtweet::post_tweet(
     status = tweet,
