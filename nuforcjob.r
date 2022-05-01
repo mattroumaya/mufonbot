@@ -19,8 +19,11 @@ df <- df %>%
   dplyr::filter(!ID %in% cases$id)
 
 reports <- df %>%
-  dplyr::arrange(Image) %>%
   dplyr::slice(1)
+
+# append recent tweet
+case_numbers <- cases %>%
+  dplyr::add_row(id = reports$ID)
 
 city_hashtag <- gsub("[[:punct:]]+", "", reports$City)
 city_hashtag <- paste0("#", gsub(" ", "", city_hashtag, fixed = TRUE))
@@ -47,10 +50,6 @@ tweet <- reports %>%
   )
 
 
-# append recent tweet
-case_numbers <- cases %>%
-  dplyr::add_row(id = reports$ID)
-
 # update case number so it doesn't repeat
 write.csv(case_numbers, here::here("nuforc", "data_raw", "archive.csv"), row.names = F)
 
@@ -69,10 +68,10 @@ if (reports$Image == "Yes") {
   imgsrc <- rvest::read_html(reports$URL) %>%
     rvest::html_node(xpath = '//*/img') %>%
     rvest::html_attr('src')
-  #download.file(imgsrc, temp_file)
+  download.file(imgsrc, temp_file)
   rtweet::post_tweet(
     status = tweet,
-    media = imgsrc,
+    media = temp_file,
     token = token
   )
 } else {
