@@ -34,10 +34,6 @@ tweet <- reports %>%
 
     Shape: {Shape}",
 
-    "
-
-    Duration: {Duration}",
-
 
     "
 
