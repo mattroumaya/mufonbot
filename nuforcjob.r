@@ -69,10 +69,10 @@ if (reports$Image == "Yes") {
   imgsrc <- rvest::read_html(reports$URL) %>%
     rvest::html_node(xpath = '//*/img') %>%
     rvest::html_attr('src')
-  download.file(imgsrc, temp_file)
+  #download.file(imgsrc, temp_file)
   rtweet::post_tweet(
     status = tweet,
-    media = temp_file,
+    media = imgsrc,
     token = token
   )
 } else {
