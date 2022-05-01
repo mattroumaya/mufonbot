@@ -37,17 +37,17 @@ tweet <- reports %>%
 
     "
 
-      Location: {City}, {State}, {Country}",
+    Location: {City}, {State}, {Country}",
 
 
     "
 
-      Date of Event: {`Date/Time`}",
+    Date of Event: {`Date/Time`}",
 
 
     "
 
-      #ufotwitter #uaptwitter {city_hashtag}"
+    #ufotwitter #uaptwitter {city_hashtag}"
   )
 
 
