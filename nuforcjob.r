@@ -6,9 +6,7 @@ library(rvest)
 library(stringr)
 library(here)
 
-df <- file.info(list.files(here::here('nuforc', 'data_raw'), full.names = T))
-data <- rownames(df)[which.max(df$mtime)]
-df <- read_csv(data)
+df <- read_csv("nuforc/march_april_2022.csv")
 
 # read archive of cases to prevent double-posting
 cases <- read_csv(here::here("nuforc", "data_raw", "archive.csv"))
@@ -31,6 +29,14 @@ city_hashtag <- paste0("#", gsub(" ", "", city_hashtag, fixed = TRUE))
 tweet <- reports %>%
   glue::glue_data(
     "Summary: {`Summary`}",
+
+    "
+
+    Shape: {Shape}",
+
+    "
+
+    Duration: {Duration}",
 
 
     "
