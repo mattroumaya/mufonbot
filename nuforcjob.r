@@ -63,7 +63,7 @@ token <- rtweet::create_token(
   set_renv = FALSE
 )
 
-if (reports$Image == "Yes") {
+if (!is.na(reports$Image)) {
   temp_file <- tempfile()
   imgsrc <- rvest::read_html(reports$URL) %>%
     rvest::html_node(xpath = '//*/img') %>%
