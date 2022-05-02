@@ -19,7 +19,7 @@ df <- df %>%
   dplyr::filter(!ID %in% cases$id)
 
 reports <- df %>%
-  dplyr::slice(1)
+  dplyr::sample_n(1)
 
 # append recent tweet
 case_numbers <- cases %>%
