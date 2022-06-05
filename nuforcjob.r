@@ -6,7 +6,7 @@ library(rtweet)
 library(stringr)
 library(here)
 
-df <- read_csv("nuforc/march_april_2022.csv")
+df <- read_csv("nuforc/recent.csv")
 
 # read archive of cases to prevent double-posting
 cases <- read_csv(here::here("nuforc", "data_raw", "archive.csv"))
