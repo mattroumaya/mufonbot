@@ -6,7 +6,8 @@ library(rtweet)
 library(stringr)
 library(here)
 
-df <- read_csv("nuforc/recent.csv")
+df <- read_csv("nuforc/recent.csv") %>%
+  rename("Date/Time" = Date.Time)
 
 # read archive of cases to prevent double-posting
 cases <- read_csv(here::here("nuforc", "data_raw", "archive.csv"))
