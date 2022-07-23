@@ -3,9 +3,7 @@ library(rvest)
 library(XML)
 
 # scrape NUFORC posting by date: https://www.nuforc.org/webreports/ndxpost.html
-
-# URLs below are for 03/04/2022 and 04/22/2022
-urls <- c("https://www.nuforc.org/webreports/ndxp220531.html")
+url <- c("https://nuforc.org/webreports/ndxp220622.html")
 
 scrape_nuforc <- function(url){
   base <- rvest::read_html(url) %>%
@@ -29,14 +27,19 @@ scrape_nuforc <- function(url){
 
 }
 
-all <- map_df(urls, ~scrape_nuforc(.))
+all <- scrape_nuforc(url)
 
-write.csv(all, file = here::here("nuforc", "data_raw", "may_2022.csv"), row.names = F)
+all_clean <- all %>%
+  mutate(madar = stringr::str_detect(Summary, "MADAR")) %>%
+  filter(madar == F)
+
+write.csv(all_clean, file = here::here("nuforc", "data_raw", "june_2022.csv"), row.names = F)
 
 ## combine old versions
-march_april <- read.csv('nuforc/march_april_2022.csv')
+march_april <- read.csv('nuforc/data_raw/march_april_2022.csv')
 may <- read.csv('nuforc/data_raw/may_2022.csv')
+june <- read.csv('nuforc/data_raw/june_2022.csv')
 
-all <- bind_rows(march_april, may)
+all <- bind_rows(march_april, may, june)
 
 write.csv(all, file = here::here("nuforc", "recent.csv"), row.names = F)
