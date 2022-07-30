@@ -64,8 +64,6 @@ token <- rtweet::rtweet_bot(
   access_secret = Sys.getenv("TWITTER_ACCESS_TOKEN_SECRET")
 )
 
-
-
 if (!is.na(reports$Image)) {
   temp_file <- tempfile(fileext = ".jpeg")
   imgsrc <- rvest::read_html(reports$URL) %>%
@@ -85,4 +83,3 @@ if (!is.na(reports$Image)) {
     token = token
   )
 }
-
