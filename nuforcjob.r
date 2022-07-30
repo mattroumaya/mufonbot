@@ -54,6 +54,8 @@ tweet <- reports %>%
 # update case number so it doesn't repeat
 write.csv(case_numbers, here::here("nuforc", "data_raw", "archive.csv"), row.names = F)
 
+alt_text <- paste0("Contact @mufonbot for an accurate alt text description. ID = ", df$ID)
+
 # create token
 token <- rtweet::rtweet_bot(
   api_key = Sys.getenv("TWITTER_CONSUMER_API_KEY"),
@@ -62,8 +64,10 @@ token <- rtweet::rtweet_bot(
   access_secret = Sys.getenv("TWITTER_ACCESS_TOKEN_SECRET")
 )
 
+
+
 if (!is.na(reports$Image)) {
-  temp_file <- tempfile()
+  temp_file <- tempfile(fileext = ".jpeg")
   imgsrc <- rvest::read_html(reports$URL) %>%
     rvest::html_node(xpath = '//*/img') %>%
     rvest::html_attr('src')
@@ -71,13 +75,14 @@ if (!is.na(reports$Image)) {
   rtweet::post_tweet(
     status = tweet,
     media = temp_file,
+    media_alt_text = alt_text,
     token = token
   )
 } else {
   rtweet::post_tweet(
     status = tweet,
+    media_alt_text = alt_text,
     token = token
   )
 }
 
-install.packages('rtweet')
