@@ -54,7 +54,7 @@ tweet <- reports %>%
 # update case number so it doesn't repeat
 write.csv(case_numbers, here::here("nuforc", "data_raw", "archive.csv"), row.names = F)
 
-alt_text <- paste0("Contact @mufonbot for an accurate alt text description. ID = ", df$ID)
+alt_text <- "Contact @mufonbot for an accurate alt text description. This image can be found in the NUFORC data archive."
 
 # create token
 token <- rtweet::rtweet_bot(
@@ -79,7 +79,6 @@ if (!is.na(reports$Image)) {
 } else {
   rtweet::post_tweet(
     status = tweet,
-    media_alt_text = alt_text,
     token = token
   )
 }
