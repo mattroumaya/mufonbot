@@ -1,78 +1,84 @@
 library(glue)
+library(rvest)
 library(dplyr)
 library(readr)
 library(rtweet)
-library(rvest)
 library(stringr)
+library(here)
 
-# read in recent data
-df <- file.info(list.files("data_raw", full.names = T))
-data <- rownames(df)[which.max(df$mtime)]
-df <- read_csv(data)
+df <- read_csv("nuforc/recent.csv") %>%
+  rename("Date/Time" = Date.Time)
 
-# read in case numbers
-cases <- read_csv("data_raw/casenumbers/case numbers.csv")
+# read archive of cases to prevent double-posting
+cases <- read_csv(here::here("nuforc", "data_raw", "archive.csv"))
 
 # filter out cases that were already tweeted
 df <- df %>%
   dplyr::group_by_all() %>%
   unique() %>%
   dplyr::ungroup() %>%
-  dplyr::filter(!`Case Number` %in% cases$ID) %>%
-  dplyr::filter(!is.na(`Short Description`) & !is.na(City) & !is.na(`State/Country`) & `Short Description` != "")
+  dplyr::filter(!ID %in% cases$id)
 
-if (nrow(df) > 1) {
+reports <- df %>%
+  dplyr::sample_n(1)
 
-  reports <- df %>%
-    dplyr::sample_n(1)
+# append recent tweet
+case_numbers <- cases %>%
+  dplyr::add_row(id = reports$ID)
 
-  # remove punctuation and create city hashtag
-  city_hashtag <- gsub("[[:punct:]]+", "", reports$City)
-  city_hashtag <- paste0("#", gsub(" ", "", city_hashtag, fixed = TRUE))
-
-  tweet <- reports %>%
-    glue::glue_data(
-      "Event: {`Short Description`}",
+city_hashtag <- gsub("[[:punct:]]+", "", reports$City)
+city_hashtag <- paste0("#", gsub(" ", "", city_hashtag, fixed = TRUE))
 
 
-      "
-
-      Location: {City}, {`State/Country`}",
-
-
-      "
-
-      Date of Event: {`Date of Event`}",
+tweet <- reports %>%
+  glue::glue_data(
+    "Summary: {`Summary`}",
 
 
-      "
+    "
 
-      #ufotwitter #uaptwitter {city_hashtag}"
-    )
+    Location: {City}, {State}, {Country}",
 
-  # archive case number
-  case_numbers <- read_csv("data_raw/casenumbers/case numbers.csv")
 
-  # append recent tweet
-  case_numbers <- case_numbers %>%
-    dplyr::add_row(ID = reports$`Case Number`)
+    "
 
-  # update case number so it doesn't repeat
-  write.csv(case_numbers, "data_raw/casenumbers/case numbers.csv", row.names = F)
+    Date of Event: {`Date/Time`}",
 
-  # create token
-  token <- rtweet::create_token(
-    app = "mufonbot",
-    consumer_key = Sys.getenv("TWITTER_CONSUMER_API_KEY"),
-    consumer_secret = Sys.getenv("TWITTER_CONSUMER_API_SECRET"),
-    access_token = Sys.getenv("TWITTER_ACCESS_TOKEN"),
-    access_secret = Sys.getenv("TWITTER_ACCESS_TOKEN_SECRET"),
-    set_renv = FALSE
+
+    "
+
+    #ufotwitter #uaptwitter {city_hashtag}"
   )
 
-    rtweet::post_tweet(
-      status = tweet,
-      token = token
-    )
-  }
 
+# update case number so it doesn't repeat
+write.csv(case_numbers, here::here("nuforc", "data_raw", "archive.csv"), row.names = F)
+
+alt_text <- "Contact @mufonbot for an accurate alt text description. This image can be found in the NUFORC data archive."
+
+# create token
+token <- rtweet::rtweet_bot(
+  api_key = Sys.getenv("TWITTER_CONSUMER_API_KEY"),
+  api_secret = Sys.getenv("TWITTER_CONSUMER_API_SECRET"),
+  access_token = Sys.getenv("TWITTER_ACCESS_TOKEN"),
+  access_secret = Sys.getenv("TWITTER_ACCESS_TOKEN_SECRET")
+)
+
+if (!is.na(reports$Image)) {
+  temp_file <- tempfile(fileext = ".jpeg")
+  imgsrc <- rvest::read_html(reports$URL) %>%
+    rvest::html_node(xpath = '//*/img') %>%
+    rvest::html_attr('src')
+  download.file(imgsrc, temp_file)
+  rtweet::post_tweet(
+    status = tweet,
+    media = temp_file,
+    media_alt_text = alt_text,
+    token = token
+  )
+} else {
+  rtweet::post_tweet(
+    status = tweet,
+    token = token
+  )
+}
