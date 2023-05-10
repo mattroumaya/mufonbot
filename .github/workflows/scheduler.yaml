@@ -2,8 +2,8 @@ name: tweet
 
 # Controls when the action will run.
 on:
-  schedule:
-    - cron: "0 * * * *"
+#  schedule:
+#    - cron: "0 * * * *"
   push:
     branches: [main, master]
 
